@@ -24,6 +24,7 @@ public class AnimatorIK : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         rht.position = rHandIdle.position;
         rht.rotation = rHandIdle.rotation;
 
@@ -62,7 +63,19 @@ public class AnimatorIK : MonoBehaviour
         //}
         // Debug.Log("wtf");
 
-  
+        var leftStickY = Input.GetAxis("Vertical");
+
+        // rightStickX = Input.GetAxis("Right Horizontal");
+
+        // rightStickY = Input.GetAxis("Right Vertical");  
+
+        var setPos = Vector3.Lerp(rHandHover.position, rHandFlying.position, leftStickY);
+        rht.position = Vector3.Lerp(rht.position, setPos, Time.deltaTime * 10);
+        var setRot = Quaternion.Lerp(rHandHover.rotation, rHandFlying.rotation, leftStickY);
+        rht.rotation = Quaternion.Lerp(rht.rotation, setRot, Time.deltaTime * 10);
+
+        lht.position = Vector3.Lerp(lHandHover.position, lhandFlying.position, leftStickY);
+        lht.rotation = Quaternion.Lerp(lHandHover.rotation, lhandFlying.rotation, leftStickY);
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
@@ -90,50 +103,50 @@ public class AnimatorIK : MonoBehaviour
 
         //  Debug.Log(target);
 
-        if (target)
-        {
-            // Distance moved = time * speed.
-           // float distCovered = (Time.time - animationStartTime) * speed;
+//        if (target)
+//        {
+//            // Distance moved = time * speed.
+//           // float distCovered = (Time.time - animationStartTime) * speed;
 
-            // Fraction of journey completed = current distance divided by total distance.
-           // float fracJourney = distCovered / targetDir.normalized.magnitude;
+//            // Fraction of journey completed = current distance divided by total distance.
+//           // float fracJourney = distCovered / targetDir.normalized.magnitude;
 
-            // Set our position as a fraction of the distance between the markers.
-           // rht.position = Vector3.Lerp(targetStartPos, target.position, fracJourney);
-            rht.position = Vector3.Lerp(rht.position, target.position, Time.deltaTime * 10);
-            rht.rotation = Quaternion.Lerp(rht.rotation, target.rotation, Time.deltaTime * 10)
-;
-            if (Vector3.Distance(target.position,rht.position) < .01)
-            {
-                rht.rotation = target.rotation;
-                rht.position = target.position;
-                target = null;
-            }
-        }
-        var removeAnimations = new List<Animation>();
-        if (runningAnimations != null)
-        {
-            foreach (var animation in runningAnimations)
-            {
-              //  if (animation.targetTransform)
-                //{
-                    animation.IKtarget.position = Vector3.Lerp(animation.IKtarget.position, animation.targetTransform.position, Time.deltaTime * 10);
-                animation.IKtarget.rotation = Quaternion.Lerp(animation.IKtarget.rotation, animation.targetTransform.rotation, Time.deltaTime * 10);
-                    if (Vector3.Distance(animation.IKtarget.position, animation.targetTransform.position) < .01)
-                    {
-                    //  animation.targetTransform = null;
-                    // runningAnimations.Remove(animation);
-                    removeAnimations.Add(animation);
-                        target = null;
-                    }
-              //  }
-            }
+//            // Set our position as a fraction of the distance between the markers.
+//           // rht.position = Vector3.Lerp(targetStartPos, target.position, fracJourney);
+//            rht.position = Vector3.Lerp(rht.position, target.position, Time.deltaTime * 10);
+//            rht.rotation = Quaternion.Lerp(rht.rotation, target.rotation, Time.deltaTime * 10)
+//;
+//            if (Vector3.Distance(target.position,rht.position) < .01)
+//            {
+//                rht.rotation = target.rotation;
+//                rht.position = target.position;
+//                target = null;
+//            }
+//        }
+//        var removeAnimations = new List<Animation>();
+//        if (runningAnimations != null)
+//        {
+//            foreach (var animation in runningAnimations)
+//            {
+//              //  if (animation.targetTransform)
+//                //{
+//                    animation.IKtarget.position = Vector3.Lerp(animation.IKtarget.position, animation.targetTransform.position, Time.deltaTime * 10);
+//                animation.IKtarget.rotation = Quaternion.Lerp(animation.IKtarget.rotation, animation.targetTransform.rotation, Time.deltaTime * 10);
+//                    if (Vector3.Distance(animation.IKtarget.position, animation.targetTransform.position) < .01)
+//                    {
+//                    //  animation.targetTransform = null;
+//                    // runningAnimations.Remove(animation);
+//                    removeAnimations.Add(animation);
+//                        target = null;
+//                    }
+//              //  }
+//            }
 
-            foreach ( var animation in removeAnimations )
-            {
-                runningAnimations.Remove(animation);
-            }
-        }
+//            foreach ( var animation in removeAnimations )
+//            {
+//                runningAnimations.Remove(animation);
+//            }
+//        }
     }
 
     List<Animation> runningAnimations;
